@@ -16,10 +16,18 @@ int g_framerate = 25;
 
 float g_rads = 0.0f;
 
-void Input() {}
+void Input() {
+  if (ESAT::IsSpecialKeyDown(ESAT::kSpecialKey_Right))
+    g_framerate += 1;
+  else if (ESAT::IsSpecialKeyDown(ESAT::kSpecialKey_Left))
+    g_framerate -= 1;
+  else
+    return;
+  
+  printf("Running at %dfps\n", g_framerate);
+}
 
 void IA(int accumTime) {
-	printf("Executing IA on %dms\n", accumTime);
 	for (int i = 0; i < 1000; i++) {
 		for (int j = 0; j < 1000; j++) {
 			NULL;
@@ -28,10 +36,8 @@ void IA(int accumTime) {
 }
 
 void Update(double m_iTimeStep) {
-	printf("Entering update\n");
-
 	
-	g_rads += 0.1f;
+	g_rads += 0.001f * m_iTimeStep;
 
 	IA(m_iTimeStep);
 }
@@ -68,6 +74,11 @@ void Draw() {
 
 	ESAT::DrawEnd();
 	ESAT::WindowFrame();
+        for (int i = 0; i < 1000; i++) {
+		for (int j = 0; j < 1000; j++) {
+			NULL;
+		}
+	}
 }
 
 
@@ -88,11 +99,13 @@ int ESAT::main(int argc, char **argv) {
 
 
 	while (ESAT::WindowIsOpened()) {
+          
+                float m_iTimeStep = 1000.0 / g_framerate;
+                
 		Input();
 
 		//accumTime at this point is nearly zero
 		float accumTime = ESAT::Time() - CurrentTime;
-		printf("\n\nACCUM : %f\n\n", accumTime);
 
 		while (accumTime >= m_iTimeStep) {
 			Update(m_iTimeStep);
@@ -100,8 +113,6 @@ int ESAT::main(int argc, char **argv) {
 			accumTime = ESAT::Time() - CurrentTime;
 		}
 
-
-		printf("Drawing\n");
 		Draw();
 
 	}
