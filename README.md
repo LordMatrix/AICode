@@ -1,2 +1,2 @@
 # AICode
-A few tests on Artificial Inteligence
+A simulator on software agent behaviour inside a military prison.
